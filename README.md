@@ -14,7 +14,7 @@ Usage
 
 ```bash
 retry -i=5s -c=2 ping -c5 www.google.com
-retry -i=10s -c=3 ping -c5 false
+retry -i=10s -c=3 false
 ```
 
 Install
