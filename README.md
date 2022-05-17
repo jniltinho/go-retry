@@ -13,8 +13,8 @@ Usage
 -----
 
 ```bash
-retry -i=5s -c=2 ping -c5 www.google.com
-retry -i=10s -c=3 false
+retry -l -i=5s -c=2 ping -c5 www.google.com
+retry -l -i=10s -c=3 false
 ```
 
 Install
