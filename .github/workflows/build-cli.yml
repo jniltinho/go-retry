@@ -12,6 +12,7 @@ env:
   AUTHOR: '${{github.event.pusher.name}}\<${{github.event.pusher.email}}\>'
   AUTHOR_URL: 'https://github.com/${{github.event.pusher.name}}'
   PACKAGE_NAME: 'retry'
+  TZ: 'America/Sao_Paulo'
 
 
 
@@ -42,7 +43,7 @@ jobs:
     - name: Set Vars
       run: |
          echo "CURRENT_DATE=$(date +'%Y-%m-%d %H:%M')" >> $GITHUB_ENV
-         echo "app_version=${PACKAGE_NAME-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
+         echo "app_version=${PACKAGE_NAME}-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
          echo "MESSAGE=$(echo '${{github.event.head_commit.message}}'|head -n 1)" >> $GITHUB_ENV
 
     - name: Download a single artifact
