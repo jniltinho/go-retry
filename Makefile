@@ -17,13 +17,12 @@ create-tar:
 	ls -sh bin/
 
 
-
 install-upx:
-	apt-get -qq update
-	apt-get install -yqq xz-utils curl
+	sudo apt-get -qq update
+	sudo apt-get install -yqq xz-utils curl
 	curl -skLO https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz
 	tar -xf upx-3.9*-amd64_linux.tar.xz
-	cp upx-3.9*-amd64_linux/upx /usr/local/bin/
-	chmod +x /usr/local/bin/upx
+	sudo cp upx-3.9*-amd64_linux/upx /usr/local/bin/
+	sudo chmod +x /usr/local/bin/upx
 	rm -rf upx-3.9*
 

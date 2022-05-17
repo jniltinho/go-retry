@@ -1,0 +1,63 @@
+name: "Build CLI"
+
+on:
+  push:
+    branches:
+      - build
+
+
+
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  AUTHOR: '${{github.event.pusher.name}}\<${{github.event.pusher.email}}\>'
+  AUTHOR_URL: 'https://github.com/${{github.event.pusher.name}}'
+  PACKAGE_NAME: 'retry'
+
+
+
+jobs:
+  build-bin:
+    runs-on: ubuntu-latest
+    container:
+      image: golang:1.18.1-bullseye
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Compile Bin
+      run: make install-upx build create-tar
+
+
+  upload-bin:
+    needs: build-bin
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set Vars
+      run: |
+         echo "CURRENT_DATE=$(date +'%Y-%m-%d %H:%M')" >> $GITHUB_ENV
+         echo "app_version=atar-cli-$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
+         echo "MESSAGE=$(echo '${{github.event.head_commit.message}}'|head -n 1)" >> $GITHUB_ENV
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{env.app_version}}
+        release_name: ${{env.app_version}}
+        body: |
+            Changes in this Release
+            - Release from: ${{github.ref_name}}
+            - Data do Deploy: ${{env.CURRENT_DATE}}
+            - Author: ${{env.AUTHOR}}
+            - Github Author: ${{env.AUTHOR_URL}}
+            - Commit: ${{github.sha}}
+            - Commit Message: ${{env.MESSAGE}}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      run: |
+         gh release upload "${app_version}" bin/${PACKAGE_NAME}_linux64.tar.gz
+
